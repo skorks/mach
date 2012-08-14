@@ -1,4 +1,5 @@
 require File.expand_path('../spec_helper', __FILE__)
+require 'mach/normalized_string'
 
 describe Mach::NormalizedString do
   let(:timestamp) {1344824119}

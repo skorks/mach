@@ -1,14 +1,16 @@
 require 'faraday'
+require 'mach/hmac'
+require 'mach/authorization_header'
 
 module Mach
   module Faraday
     class HmacAuthentication < ::Faraday::Middleware
+      include Mach::HMAC
       KEY = "Authorization".freeze
 
       def initialize(app, id, key)
         @mac_id = id
         @mac_key = key
-        @auth_type = "MAC"
         super(app)
       end
 
@@ -20,53 +22,41 @@ module Mach
       end
 
       def header(env)
-        "#{@auth_type} #{mac_auth_value(env)}".tap do |a|
-          p a
-        end
+        AuthorizationHeader.new(@mac_id, @mac_key,
+                                :request_method => mac_request_method(request_method(env)),
+                                :path => mac_path(path(env), query_string(env)),
+                                :host => mac_host(host(env)),
+                                :port => mac_port(port(env), scheme(env)),
+                                :ext => mac_ext(ext(env))).to_s
       end
 
       private
-      def mac_auth_value(env)
-        AuthorizationHeader.new(id, key).to_s
-        #timestamp = HMAC::Timestamp.now
-        #nonce = HMAC::Nonce.for(timestamp)
-        #mac = sign_normalized_string(env, timestamp, nonce)
-        #"id=\"#{@mac_id}\",ts=\"#{timestamp}\",nonce=\"#{nonce}\",mac=\"#{mac}\""
+      def request_method(env)
+        env[:request_method]
       end
 
-      def sign_normalized_string(env, timestamp, nonce)
-        normalized_string = NormalizedString.new(:timestamp => timestamp,
-                             :nonce => nonce,
-                             :request_method => mac_request_method(env),
-                             :path => mac_path(env),
-                             :host => mac_host(env),
-                             :port => mac_port(env)
-                            )
-        signed_string = HMAC.signature_for("hmac-sha-256", @mac_key, normalized_string.to_s)
+      def host(env)
+        env[:url].host
       end
 
-      def mac_request_method(env)
-        env[:request_method].to_s.upcase
+      def port(env)
+        env[:url].port
       end
 
-      def mac_host(env)
-        url = env[:url]
-        url.host
+      def path(env)
+        env[:url].path
       end
 
-      def mac_port(env)
-        url = env[:url]
-        port = url.port
-        unless port
-          port = 80 if url.scheme == 'http'
-          port = 443 if url.scheme == 'https'
-        end
-        port
+      def query_string(env)
+        env[:url].query
       end
 
-      def mac_path(env)
-        url = env[:url]
-        "#{url.path}?#{url.query}"
+      def ext(env)
+        nil
+      end
+
+      def scheme(env)
+        env[:url].scheme
       end
     end
   end

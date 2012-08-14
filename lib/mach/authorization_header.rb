@@ -1,3 +1,8 @@
+require 'mach/timestamp'
+require 'mach/nonce'
+require 'mach/normalized_string'
+require 'mach/signature'
+
 module Mach
   class AuthorizationHeader
     def initialize(id, key, options = {})

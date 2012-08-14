@@ -16,6 +16,10 @@ module Mach
       Base64.strict_encode64(OpenSSL::HMAC.digest(digest, decoded_key, @data))
     end
 
+    def matches?(base64_expected_signature)
+      to_s == base64_expected_signature
+    end
+
     private
     def digest
       digest_algorithm = @algorithm ? ALGORITHMS[@algorithm] : ALGORITHMS[DEFAULT_ALGORITHM]

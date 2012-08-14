@@ -1,5 +1,6 @@
 require File.expand_path('../spec_helper', __FILE__)
 require "base64"
+require 'mach/signature'
 
 describe Mach::Signature do
   let(:key) {Base64.strict_encode64("some_key")}

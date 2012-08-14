@@ -1,5 +1,9 @@
+require 'mach/normalized_string'
+
 module Mach
   class Request < ::Rack::Request
+    include Mach::HMAC
+
     def authorization
       @env['HTTP_AUTHORIZATION']
     end
@@ -28,27 +32,15 @@ module Mach
       self.authorization.scan(/^\s*MAC\s*.*mac="(.*?)".*/).flatten[0]
     end
 
-    def mac_path
-      "#{path}?#{query_string}"
-    end
-
-    def mac_port
-      port = self.port
-      unless port
-        port = 80 if self.scheme == 'http'
-        port = 443 if self.scheme == 'https'
-      end
-      port
-    end
-
     def mac_normalized_request_string
       if mac_authorization?
         NormalizedString.new(:timestamp => mac_timestamp,
                              :nonce => mac_nonce,
                              :request_method => request_method,
-                             :path => mac_path,
+                             :path => mac_path(path, query_string),
                              :host => host,
-                             :port => mac_port
+                             :port => mac_port(self.port, self.scheme),
+                             :ext => mac_ext
                             ).to_s
       else
         ""
