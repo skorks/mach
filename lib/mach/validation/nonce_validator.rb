@@ -3,7 +3,7 @@ module Mach
     class NonceValidator
       class << self
         def valid?(hmac_request)
-          !Nonce.exists?(hmac_request.mac_nonce)
+          !Nonce.exists?(hmac_request.mac_id, hmac_request.mac_nonce)
         end
       end
     end
