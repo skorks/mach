@@ -35,5 +35,17 @@ describe Mach::Signature do
       #it {subject.should == "YnHx40PpfjMaxtO+sxJvg2XtOF70L1zGlNad92dg8i4="}
     #end
   end
+
+  describe "#matches?" do
+    subject { Mach::Signature.new(key, data).matches?(expected_signature) }
+    context "when expected signature is invalid" do
+      let(:expected_signature) { "abc123" }
+      it {subject.should_not be_true}
+    end
+    context "when expected signature is valid" do
+      let(:expected_signature) { "/wfbnU08rHnneh2Q4wSopDyULH43ePyuSyHMBc9nbnw=" }
+      it {subject.should be_true}
+    end
+  end
 end
 

@@ -10,11 +10,11 @@ module Mach
       def valid?(rack_request, base64_key = nil)
         hmac_request = Mach::Request.new(rack_request.env)
         raise Mach::Error::RequestNotMacAuthenticatedError unless hmac_request.mac_authorization?
-        valid = Mach::TimestampValidator.valid?(hmac_request) &&
-        Mach::NonceValidator.valid?(hmac_request) &&
-        Mach::SignatureValidator.valid?(hmac_request, base64_key)
+        valid = Mach::Validation::TimestampValidator.valid?(hmac_request) &&
+        Mach::Validation::NonceValidator.valid?(hmac_request) &&
+        Mach::Validation::SignatureValidator.valid?(hmac_request, base64_key)
         #need to make sure we store the nonce
-        Nonce.persist(hmac_request.mac_id, hmac_request.mac_nonce, hmac_request.mac_timestamp)
+        Nonce.persist(hmac_request.mac_id, hmac_request.mac_nonce, hmac_request.mac_timestamp.to_i)
         valid
       end
     end

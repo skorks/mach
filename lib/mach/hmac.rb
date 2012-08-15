@@ -5,7 +5,7 @@ module Mach
     end
 
     def mac_path(path, query_string)
-      "#{path}?#{query_string}"
+      query_string && !query_string.empty? ? "#{path}?#{query_string}" : "#{path}"
     end
 
     def mac_host(host)

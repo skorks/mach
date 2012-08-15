@@ -10,8 +10,7 @@ module Mach
           if base64_key
             Mach::Signature.new(base64_key, data).matches?(hmac_request.mac_signature)
           else
-            validation_strategy = Mach.configuration.signature_validation_strategy.new(hmac_request.mac_id, hmac_request.mac_signature, data)
-            validation_strategy.verify
+            Mach.configuration.signature_validation_strategy.verify(hmac_request.mac_id, hmac_request.mac_signature, data)
           end
         end
       end

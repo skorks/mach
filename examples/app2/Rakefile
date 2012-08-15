@@ -1,0 +1,7 @@
+require 'rack'
+require 'rack/handler/webrick'
+
+desc "Run the server"
+task :server do
+  Rack::Server.start(:config => 'config.ru', :server => 'webrick', :Port => 9494)
+end

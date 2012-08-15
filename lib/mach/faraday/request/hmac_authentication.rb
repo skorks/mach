@@ -32,7 +32,7 @@ module Mach
 
       private
       def request_method(env)
-        env[:request_method]
+        env[:method]
       end
 
       def host(env)

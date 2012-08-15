@@ -17,8 +17,8 @@ module Mach
 
     private
     def build_auth_value
-      timestamp = HMAC::Timestamp.now
-      nonce = HMAC::Nonce.for(timestamp)
+      timestamp = Mach::Timestamp.now
+      nonce = Mach::Nonce.for(timestamp)
       normalized_string = NormalizedString.new(:timestamp => timestamp,
                                                :nonce => nonce,
                                                :request_method => @options[:request_method],

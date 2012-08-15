@@ -1,10 +1,12 @@
+require 'mach/signature'
+
 module Mach
   module Validation
     module Strategy
       class InMemoryKeys
         class << self
           def configure(credentials = {})
-            InMemoryKeys.new(credentials)
+            self.new(credentials)
           end
         end
 
