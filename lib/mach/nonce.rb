@@ -14,7 +14,8 @@ module Mach
       end
 
       def persist(credential_id, nonce_value, timestamp)
-        Mach.configuration.data_store.add_nonce(credential_id, nonce_value, timestamp)
+        expires_in = Mach.configuration.stale_request_window
+        Mach.configuration.data_store.add_nonce(credential_id, nonce_value, expires_in)
       end
     end
   end

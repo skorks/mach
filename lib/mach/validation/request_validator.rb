@@ -14,7 +14,7 @@ module Mach
         Mach::Validation::NonceValidator.valid?(hmac_request) &&
         Mach::Validation::SignatureValidator.valid?(hmac_request, base64_key)
         #need to make sure we store the nonce
-        Nonce.persist(hmac_request.mac_id, hmac_request.mac_nonce, hmac_request.mac_timestamp.to_i)
+        Nonce.persist(hmac_request.mac_id, hmac_request.mac_nonce, hmac_request.mac_timestamp.to_i) if valid
         valid
       end
     end

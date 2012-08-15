@@ -16,9 +16,10 @@ module Mach
     end
 
     private
+
     def build_auth_value
-      timestamp = Mach::Timestamp.now
-      nonce = Mach::Nonce.for(timestamp)
+      timestamp = create_timestamp
+      nonce = create_nonce_for(timestamp)
       normalized_string = NormalizedString.new(:timestamp => timestamp,
                                                :nonce => nonce,
                                                :request_method => @options[:request_method],
@@ -27,7 +28,19 @@ module Mach
                                                :port => @options[:port]
                                               )
       mac = Mach::Signature.new(@key, normalized_string.to_s)  #sign_normalized_string(env, timestamp, nonce)
-      "id=\"#{@id}\",ts=\"#{timestamp}\",nonce=\"#{nonce}\",mac=\"#{mac}\""
+      "id=\"#{@id}\",ts=\"#{timestamp}\",nonce=\"#{nonce_for_header(nonce)}\",mac=\"#{mac}\""
+    end
+
+    def create_timestamp
+      Mach.configuration.test_mode.active && Mach.configuration.test_mode.fake_timestamp ? Mach.configuration.test_mode.fake_timestamp : Mach::Timestamp.now
+    end
+
+    def create_nonce_for(timestamp)
+      Mach.configuration.test_mode.active && Mach.configuration.test_mode.fake_nonce ? Mach.configuration.test_mode.fake_nonce : Mach::Nonce.for(timestamp)
+    end
+
+    def nonce_for_header(actual_nonce)
+      Mach.configuration.test_mode.active && Mach.configuration.test_mode.suspicious_nonce ? Mach.configuration.test_mode.suspicious_nonce : actual_nonce
     end
   end
 end

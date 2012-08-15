@@ -28,9 +28,9 @@ module Mach
 
       def find_nonce_by(credential_id, nonce_value)
         nonces_for_credential_id = @nonces[credential_id] || {}
-        expires_at = nonce_value = nonces_for_credential_id[nonce_value]
+        expires_at = nonces_for_credential_id[nonce_value]
         now = Timestamp.now
-        if nonce_value && expires_at > now
+        if expires_at && expires_at > now
           nonce_value
         else
           nonces_for_credential_id[nonce_value] = nil
