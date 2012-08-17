@@ -10,7 +10,8 @@ Mach.configuration do |configuration|
   #configuration.signature_validation_strategy = Mach::Validation::Strategy::InMemoryKeys.configure(MAC_ID => MAC_KEY)
   configuration.signature_validation_strategy = Mach::Validation::Strategy::RemoteKeyFetching.configure("http://localhost:9595", "/secret", "id")
   configuration.stale_request_window = 10
-  configuration.data_store = Mach::Persistence::InMemoryStore.new
+  #configuration.data_store = Mach::Persistence::InMemoryStore.new
+  configuration.data_store = Mach::Persistence::RedisStore.new("localhost", "6379")
 end
 
 class App < Sinatra::Base
