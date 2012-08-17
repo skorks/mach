@@ -2,6 +2,7 @@ require 'bundler/setup'
 require 'sinatra/base'
 require 'mach'
 require 'base64'
+require 'multi_json'
 
 MAC_ID = "abc"
 MAC_KEY = Base64.strict_encode64("123")
@@ -41,6 +42,22 @@ class App < Sinatra::Base
     Mach.configuration.test_mode.suspicious_nonce = "foobar"
     @connection.get { |req| req.url '/' } #request should fail due to signature validation
     Mach.configuration.test_mode.suspicious_nonce = nil
+  end
+
+  get '/with_credentials' do
+    #get the credentials
+    connection = Faraday.new(:url => "http://localhost:9595") do |c|
+      c.adapter Faraday.default_adapter
+    end
+    credentials_response = connection.get { |req| req.url "/credentials" } # first request is to store the client delta
+    credentials = MultiJson.decode(credentials_response.body)
+
+    #make a request using those credentials
+    connection = Faraday.new(:url => "http://localhost:9494") do |c|
+      c.request :hmac_authentication, credentials["id"], credentials["secret"]
+      c.adapter Faraday.default_adapter
+    end
+    connection.get { |req| req.url '/' }
   end
 end
 

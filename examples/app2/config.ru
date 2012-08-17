@@ -7,7 +7,8 @@ MAC_ID = "abc"
 MAC_KEY = Base64.strict_encode64("123")
 
 Mach.configuration do |configuration|
-  configuration.signature_validation_strategy = Mach::Validation::Strategy::InMemoryKeys.configure(MAC_ID => MAC_KEY)
+  #configuration.signature_validation_strategy = Mach::Validation::Strategy::InMemoryKeys.configure(MAC_ID => MAC_KEY)
+  configuration.signature_validation_strategy = Mach::Validation::Strategy::RemoteKeyFetching.configure("http://localhost:9595", "/secret", "id")
   configuration.stale_request_window = 10
   configuration.data_store = Mach::Persistence::InMemoryStore.new
 end

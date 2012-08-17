@@ -1,4 +1,5 @@
 require 'mach/validation/strategy/in_memory_keys'
+require 'mach/validation/strategy/remote_key_fetching'
 require 'mach/persistence/in_memory_store'
 require 'base64'
 
