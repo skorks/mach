@@ -4,7 +4,7 @@ require 'mach/timestamp'
 module Mach
   module Persistence
     class InMemoryStore < Mach::Persistence::DeltaAndNonceStore
-      def initialize
+      def initialize(options = {})
         @deltas = {}
         @nonces = {}
       end

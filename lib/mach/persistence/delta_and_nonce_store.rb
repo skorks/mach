@@ -1,6 +1,12 @@
 module Mach
   module Persistence
     class DeltaAndNonceStore
+      class << self
+        def configure(options = {})
+          self.new(options)
+        end
+      end
+
       def find_delta_by(credential_id)
         raise "Implement me"
       end

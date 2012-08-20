@@ -1,3 +1,4 @@
+require 'mach/validation/strategy/base'
 require 'mach/signature'
 require 'faraday'
 require 'multi_json'
@@ -5,17 +6,10 @@ require 'multi_json'
 module Mach
   module Validation
     module Strategy
-      class RemoteKeyFetching
-        class << self
-          def configure(base_url, path, id_param_name)
-            self.new(base_url, path, id_param_name)
-          end
-        end
-
-        def initialize(base_url, path, id_param_name)
-          @base_url = base_url
-          @path = path
-          @id_param_name = id_param_name
+      class RemoteKey < Base
+        def initialize(options = {})
+          raise MissingConfigurationOptionError unless options[:url]
+          @url = options[:url]
         end
 
         def verify(credential_id, request_signature, data)
@@ -31,12 +25,13 @@ module Mach
 
         private
         def fetch_credentials(credential_id)
-          connection = ::Faraday.new(:url => @base_url) do |c|
+          actual_url = @url % credential_id
+          connection = ::Faraday.new(:url => actual_url) do |c|
             c.adapter ::Faraday.default_adapter
           end
 
           credentials_response = fetch_with_error_handling(credential_id) do |credential_id|
-            connection.get { |req| req.url @path, @id_param_name.to_sym => credential_id }
+            connection.get
           end
 
           credentials = decode_with_error_handling(credentials_response.body) do |json_string|

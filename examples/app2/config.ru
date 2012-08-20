@@ -3,15 +3,13 @@ require 'sinatra/base'
 require 'mach'
 require 'base64'
 
-MAC_ID = "abc"
-MAC_KEY = Base64.strict_encode64("123")
+#MAC_ID = "abc"
+#MAC_KEY = Base64.strict_encode64("123")
 
-Mach.configuration do |configuration|
-  #configuration.signature_validation_strategy = Mach::Validation::Strategy::InMemoryKeys.configure(MAC_ID => MAC_KEY)
-  configuration.signature_validation_strategy = Mach::Validation::Strategy::RemoteKeyFetching.configure("http://localhost:9595", "/secret", "id")
-  configuration.stale_request_window = 10
-  #configuration.data_store = Mach::Persistence::InMemoryStore.new
-  configuration.data_store = Mach::Persistence::RedisStore.new("localhost", "6379")
+Mach.configuration do |config|
+  config.signature_validation_strategy :remote_key, :url => "http://localhost:9595/secret?id=%s"
+  config.stale_request_window 10
+  config.data_store :redis, :host => "localhost", :port => "6379"
 end
 
 class App < Sinatra::Base

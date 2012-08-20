@@ -15,5 +15,17 @@ module Mach
         @configuration
       end
     end
+    alias :config :configuration # can use either config or configuration
+
+    def respond_to?(method, include_private=false)
+      self.configuration.respond_to?(method, include_private) || super
+    end
+
+    private
+
+    def method_missing(method, *args, &block)
+      return super unless self.configuration.respond_to?(method)
+      self.configuration.send(method, *args, &block)
+    end
   end
 end

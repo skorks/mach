@@ -4,5 +4,7 @@ module Mach
     end
     class CredentialFetchingError < StandardError
     end
+    class MissingConfigurationOptionError < StandardError
+    end
   end
 end

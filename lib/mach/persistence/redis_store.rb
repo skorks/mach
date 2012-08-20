@@ -5,10 +5,9 @@ require 'redis'
 module Mach
   module Persistence
     class RedisStore < Mach::Persistence::DeltaAndNonceStore
-      def initialize(host, port)
-        @host = host
-        @port = port
-        @redis = Redis.new(:host => @host, :port => @port)
+      def initialize(options = {})
+        raise MissingConfigurationOptionError unless options[:host] && options[:port]
+        @redis = Redis.new(:host => options[:host], :port => options[:port])
       end
 
       def find_delta_by(credential_id)
