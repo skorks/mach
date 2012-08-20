@@ -27,6 +27,7 @@ module Mach
         def fetch_credentials(credential_id)
           actual_url = @url % credential_id
           connection = ::Faraday.new(:url => actual_url) do |c|
+            #TODO is it ok to just use the net http adapter here??? i.e. asynch etc
             c.adapter ::Faraday.default_adapter
           end
 
