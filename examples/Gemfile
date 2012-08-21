@@ -3,3 +3,7 @@ source :rubygems
 gem 'sinatra'
 gem 'multi_json'
 gem 'mach', :path => '../../'
+
+gem 'redis'
+
+gem 'rake'
