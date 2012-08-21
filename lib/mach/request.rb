@@ -1,3 +1,4 @@
+require 'rack'
 require 'mach/normalized_string'
 
 module Mach
