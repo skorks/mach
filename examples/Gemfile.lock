@@ -31,6 +31,7 @@ PLATFORMS
 DEPENDENCIES
   mach!
   multi_json
+  rack
   rake
   redis
   sinatra
