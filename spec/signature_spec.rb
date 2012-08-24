@@ -3,7 +3,7 @@ require "base64"
 require 'mach/signature'
 
 describe Mach::Signature do
-  let(:key) {Base64.strict_encode64("some_key")}
+  let(:key) { "some_key" }
   let(:data) {"hello world"}
 
   describe "#to_s" do
@@ -31,19 +31,23 @@ describe Mach::Signature do
                                   #).to_s
       #end
 
-      #let(:key) {Base64.strict_encode64("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")}
+      #let(:key) { "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" }
       #it {subject.should == "YnHx40PpfjMaxtO+sxJvg2XtOF70L1zGlNad92dg8i4="}
     #end
   end
 
   describe "#matches?" do
-    subject { Mach::Signature.new(key, data).matches?(expected_signature) }
+    let(:signature) { Mach::Signature.new(key, data) }
+    subject { signature.matches?(expected_signature) }
+
+
     context "when expected signature is invalid" do
       let(:expected_signature) { "abc123" }
       it {subject.should_not be_true}
     end
     context "when expected signature is valid" do
-      let(:expected_signature) { "/wfbnU08rHnneh2Q4wSopDyULH43ePyuSyHMBc9nbnw=" }
+      let(:expected_signature) { '/wfbnU08rHnneh2Q4wSopDyULH43ePyuSyHMBc9nbnw=' }
+
       it {subject.should be_true}
     end
   end
