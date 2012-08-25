@@ -1,0 +1,13 @@
+require 'rack'
+require 'rack/handler/webrick'
+
+namespace :run do
+  Dir['*.ru'].each do |server_config|
+    server_path = Pathname.new(server_config)
+    server_name = server_path.basename(server_path.extname)
+    desc "Run the #{server_name}"
+    task server_name do
+      Rack::Server.start(:config => server_config)
+    end
+  end
+end
