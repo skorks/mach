@@ -7,12 +7,12 @@ require 'mach/validation/signature_validator'
 module Mach
   class RequestValidator
     class << self
-      def valid?(rack_request, base64_key = nil)
+      def valid?(rack_request)
         hmac_request = Mach::Request.new(rack_request.env)
         raise Mach::Error::RequestNotMacAuthenticatedError unless hmac_request.mac_authorization?
         valid = Mach::Validation::TimestampValidator.valid?(hmac_request) &&
         Mach::Validation::NonceValidator.valid?(hmac_request) &&
-        Mach::Validation::SignatureValidator.valid?(hmac_request, base64_key)
+        Mach::Validation::SignatureValidator.valid?(hmac_request)
         #need to make sure we store the nonce
         Nonce.persist(hmac_request.mac_id, hmac_request.mac_nonce, hmac_request.mac_timestamp.to_i) if valid
         valid
