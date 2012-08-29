@@ -19,7 +19,6 @@ module Mach
         delta_value
       end
 
-
       def find_nonce_by(credential_id, nonce_value)
         @redis.get(nonce_key_for(credential_id, nonce_value))
       end

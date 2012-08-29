@@ -2,7 +2,7 @@ source :rubygems
 
 gem 'sinatra'
 gem 'multi_json'
-gem 'credential_store', :git => 'git@github.com:playup/credential_store.git'
 gem 'mach', :path => '../../'
 
 gem 'pry'
+gem 'credential_store', :git => 'git@github.com:playup/credential_store.git'
