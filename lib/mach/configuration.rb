@@ -10,7 +10,7 @@ module Mach
     def initialize
       @stale_request_window = 10
       @data_store = Mach::Persistence::InMemoryStore.configure({})
-      @credential_store = CredentialStore::Adapter::Redis.new({})
+      @credential_store = Hash.new
     end
 
     def with_credential_store(store, options = {})

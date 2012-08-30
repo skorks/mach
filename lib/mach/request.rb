@@ -10,7 +10,7 @@ module Mach
     end
 
     def mac_authorization?
-      self.authorization =~ /^\s*MAC .*$/
+      !!(self.authorization =~ /^\s*MAC .*$/)
     end
 
     def mac_id

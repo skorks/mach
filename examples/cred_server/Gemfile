@@ -3,3 +3,9 @@ source :rubygems
 gem 'sinatra'
 gem 'multi_json'
 gem 'mach', :path => '../../'
+
+gem 'redis'
+gem 'rack'
+
+gem 'rake'
+gem 'credential_store', :git => 'git@github.com:playup/credential_store.git'

@@ -32,15 +32,15 @@ module Mach
     end
 
     def create_timestamp
-      Mach.configuration.test_mode.active && Mach.configuration.test_mode.fake_timestamp ? Mach.configuration.test_mode.fake_timestamp : Mach::Timestamp.now
+      Mach::Timestamp.now
     end
 
     def create_nonce_for(timestamp)
-      Mach.configuration.test_mode.active && Mach.configuration.test_mode.fake_nonce ? Mach.configuration.test_mode.fake_nonce : Mach::Nonce.for(timestamp)
+      Mach::Nonce.for(timestamp)
     end
 
     def nonce_for_header(actual_nonce)
-      Mach.configuration.test_mode.active && Mach.configuration.test_mode.suspicious_nonce ? Mach.configuration.test_mode.suspicious_nonce : actual_nonce
+      actual_nonce
     end
   end
 end

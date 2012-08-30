@@ -1,16 +1,18 @@
+#!/usr/bin/env ruby
 require 'bundler/setup'
-require 'sinatra/base'
 require 'mach'
 require 'base64'
 require 'multi_json'
 
-MAC_ID = "abc"
-MAC_KEY = Base64.strict_encode64("123")
+MAC_ID  = ENV['MAC_ID' ] || "abc"
+MAC_KEY = ENV['MAC_KEY'] || Base64.strict_encode64("123")
 
 Mach.configuration do |configuration|
-  configuration.test_mode.active = true
+  #configuration.test_mode.active = true  # undefined method `test_mode' for #<Mach::Configuration
 end
 
+=begin
+require 'sinatra/base'
 class App < Sinatra::Base
   before do
     @connection = Faraday.new(:url => "http://localhost:9494") do |c|
@@ -45,6 +47,13 @@ class App < Sinatra::Base
   end
 
   get '/with_credentials' do
+  end
+end
+
+run App.new
+=end
+
+def with_credentials
     #get the credentials
     connection = Faraday.new(:url => "http://localhost:9595") do |c|
       c.adapter Faraday.default_adapter
@@ -58,7 +67,6 @@ class App < Sinatra::Base
       c.adapter Faraday.default_adapter
     end
     connection.get { |req| req.url '/' }
-  end
 end
 
-run App.new
+with_credentials
