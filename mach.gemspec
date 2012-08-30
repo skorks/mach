@@ -16,7 +16,6 @@ Gem::Specification.new do |s|
   s.add_dependency 'faraday'
   s.add_dependency 'rack'
   s.add_dependency 'multi_json'
-  s.add_dependency 'credential_store'
   s.add_dependency 'redis'
 
   s.add_development_dependency  'rake'
