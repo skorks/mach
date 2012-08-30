@@ -1,13 +1,26 @@
 require 'rack'
 require 'rack/handler/webrick'
 
-namespace :run do
-  Dir['*.ru'].each do |server_config|
-    server_path = Pathname.new(server_config)
-    server_name = server_path.basename(server_path.extname)
-    desc "Run the #{server_name}"
-    task server_name do
+Dir['*.ru'].each do |server_config|
+  server_path = Pathname.new(server_config)
+  server_name = server_path.basename(server_path.extname)
+  namespace server_name.to_s.to_sym  do
+    desc "Start the #{server_name}"
+    task :start do
       Rack::Server.start(:config => server_config)
     end
   end
 end
+
+task :client do
+ puts `ruby ./client.rb`
+end
+
+task :help do
+  puts 'Start the credential server first like so: rake credential_server:start'
+  puts 'Then start the validating server like so: rake validating_server:start'
+  puts 'And run the clien like: rake client'
+end
+
+task :default => :help
+
