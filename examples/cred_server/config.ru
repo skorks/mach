@@ -9,15 +9,15 @@ require 'multi_json'
 @@credential_store = {}
 
 class App < Sinatra::Base
-  get '/credentials' do
+  post '/credentials' do
     content_type 'application/json'
     credentials = CredentialsGenerator.generate_id_secret_pair
     @@credential_store[credentials[:id]] = credentials[:secret]
     MultiJson.encode(credentials)
   end
 
-  get '/secret' do
-    MultiJson.encode({:id => params[:id], :secret => @@credential_store[params[:id]]})
+  get '/credentials/:id' do |id|
+    MultiJson.encode({:id => id, :secret => @@credential_store[id]})
   end
 end
 
