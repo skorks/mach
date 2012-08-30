@@ -10,7 +10,7 @@ GIT
       redis
 
 PATH
-  remote: ../../
+  remote: ../
   specs:
     mach (0.0.1)
       faraday
