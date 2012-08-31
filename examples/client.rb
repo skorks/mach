@@ -12,9 +12,13 @@ def get_credentials
   credentials = MultiJson.decode(credentials_response.body)
 end
 
+def validating_server
+  @validating_server ||= ENV['VALIDATING_SERVER'] || "http://localhost:9494"
+end
+
 def make_request(id, secret)
   #make a request using those credentials
-  connection = Faraday.new(:url => "http://localhost:9494") do |c|
+  connection = Faraday.new(:url => validating_server) do |c|
     c.request :hmac_authentication, id, secret
     c.adapter Faraday.default_adapter
   end
