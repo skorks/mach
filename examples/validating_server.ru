@@ -19,7 +19,6 @@ class App < Sinatra::Base
   use Mach::Rack::RequestValidator
 
   get '/' do
-    p (Mach::RequestValidator.valid?(request)) ? "Request is valid" : "Request is not valid"
     'OK'
   end
 end
