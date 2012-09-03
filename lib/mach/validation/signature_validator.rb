@@ -15,7 +15,7 @@ module Mach
             debug_log(sprintf('normalized request string: %s', hmac_request.normalized_request_string))
             signature = Mach::Signature.new(secret, data)
             result signature.matches?(hmac_request.mac_signature)
-            debug_log("sigature [generated]: %s signature[request] %s, matches?: %s",
+            debug_log(sprintf("sigature [generated]: %s signature[request] %s, matches?: %s",
                       signature.to_s, hmac_request.mac_signature, result))
             result
           else
