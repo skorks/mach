@@ -3,6 +3,8 @@ require 'bundler/setup'
 require 'mach'
 require 'base64'
 require 'multi_json'
+require 'optparse'
+require 'date'
 
 def get_credentials
   connection = Faraday.new(:url => "http://localhost:9595") do |c|
@@ -36,5 +38,58 @@ def make_invalid_request
   make_request(credentials["id"], "XXX")
 end
 
-p make_valid_request
-p make_invalid_request
+def make_request_with_given_credentials(url, id, secret)
+  connection = Faraday.new(:url => url) do |c|
+    c.request :hmac_authentication, id, secret
+    c.adapter Faraday.default_adapter
+  end
+  res = connection.get
+  p [res.status, res.body]
+  [res.status, res.body]
+end
+
+options = {:id => "x", :secret => "y"}
+
+opt_parser = OptionParser.new do |opt|
+  opt.banner = "Usage: client [OPTIONS]"
+  opt.separator  ""
+  opt.separator  "Options"
+
+  opt.on("-i ID", "--id ID", String, "the mac id") do |id|
+    options[:id] = id
+  end
+
+  opt.on("-d SECRET","--secret SECRET", String, "the mac secret") do |secret|
+    options[:secret] = secret
+  end
+
+  opt.on("-u URL","--url URL", String, "the url to hit") do |url|
+    options[:url] = url
+  end
+
+  opt.on("-g", "--good", "a valid request getting credentials from the credential store") do
+    options[:good] = true
+  end
+
+  opt.on("-b", "--bad", "an invalid request getting credentials from the credential store") do
+    options[:bad] = true
+  end
+
+  opt.on_tail("-h","--help","help") do
+    puts opt_parser
+  end
+end
+
+opt_parser.parse!
+
+if options[:good]
+  make_valid_request
+elsif options[:bad]
+  make_invalid_request
+else
+  raise "You need to supply an id and a secret" unless options[:id] && options[:secret]
+  raise "You need to supply a url to hit" unless options[:url]
+  options[:secret] = Base64.strict_encode64(options[:secret])
+  p options
+  make_request_with_given_credentials(options[:url], options[:id], options[:secret])
+end
