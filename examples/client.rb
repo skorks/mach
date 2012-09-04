@@ -1,17 +1,29 @@
 #!/usr/bin/env ruby
 require 'bundler/setup'
 require 'mach'
-require 'base64'
 require 'multi_json'
 require 'optparse'
 require 'date'
 
-def get_credentials
-  connection = Faraday.new(:url => "http://localhost:9595") do |c|
-    c.adapter Faraday.default_adapter
-  end
-  credentials_response = connection.post { |req| req.url "/credentials" } # first request is to store the client delta
-  credentials = MultiJson.decode(credentials_response.body)
+def credentials
+  @credentials ||= (
+    env_credentials ||
+    lambda {
+      connection = Faraday.new(:url => creds_server) do |c|
+        c.adapter Faraday.default_adapter
+      end
+      credentials_response = connection.post { |req| req.url "/credentials" } # first request is to store the client delta
+      MultiJson.decode(credentials_response.body)
+    }.call
+  ).tap { |credentials| puts "Using credentials: #{credentials.inspect}" }
+end
+
+def env_credentials
+  @env_credentials ||= ENV['CREDENTIALS'] && Hash[%w{id secret}.zip(ENV['CREDENTIALS'].split(":"))]
+end
+
+def creds_server
+  @creds_server ||= ENV['CREDS_SERVER'] || "http://localhost:9090"
 end
 
 def validating_server
@@ -29,12 +41,10 @@ def make_request(id, secret)
 end
 
 def make_valid_request
-  credentials = get_credentials
   make_request(credentials["id"], credentials["secret"])
 end
 
 def make_invalid_request
-  credentials = get_credentials
   make_request(credentials["id"], "XXX")
 end
 
