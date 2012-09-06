@@ -97,9 +97,9 @@ end
 opt_parser.parse!
 
 if options[:good]
-  make_valid_request
+  p make_valid_request
 elsif options[:bad]
-  make_invalid_request
+  p make_invalid_request
 else
   raise "You need to supply an id and a secret" unless options[:id] && options[:secret]
   raise "You need to supply a url to hit" unless options[:url]
