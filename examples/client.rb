@@ -63,6 +63,9 @@ def make_request_with_given_credentials(url, id, secret)
 end
 
 options = {:id => "x", :secret => "y"}
+#options = {:id => "GnW4HUDf1zJ8YFcJbSQYm6sgDmzKVbuY", :secret => "Yi1z+//6qfsa6FXvPRraRc4YjPhfopLaq1O0U2x8ZyU="}
+options = {:id => "qsa96BTnxLCQB8JcML1QxW4LKswGyiY7", :secret => 'zcXzUmZmqLifHVtXmgo8ro13ZfN1ZpN1zRhez+sYh+c='}
+options = {:id => "test_id", :secret => 'secret'}
 
 opt_parser = OptionParser.new do |opt|
   opt.banner = "Usage: client [OPTIONS]"

@@ -6,11 +6,13 @@ module Mach
   class Configuration
 
     attr_reader :credential_store, :data_store, :stale_request_window
+    attr_accessor :ignore_validation_failure
 
     def initialize
       @stale_request_window = 10
       @data_store = Mach::Persistence::InMemoryStore.configure({})
       @credential_store = Hash.new
+      @ignore_validation_failure = false
     end
 
     def with_credential_store(store, options = {})
