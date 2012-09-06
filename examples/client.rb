@@ -30,13 +30,17 @@ def validating_server
   @validating_server ||= ENV['VALIDATING_SERVER'] || "http://localhost:9494"
 end
 
+def env_resource
+  @env_resource ||= ENV['RESOURCE'] || '/'
+end
+
 def make_request(id, secret)
   #make a request using those credentials
   connection = Faraday.new(:url => validating_server) do |c|
     c.request :hmac_authentication, id, secret
     c.adapter Faraday.default_adapter
   end
-  res = connection.get { |req| req.url '/' }
+  res = connection.get { |req| req.url env_resource }
   [res.status, res.body]
 end
 
