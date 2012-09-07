@@ -16,9 +16,17 @@ module Mach
           Mach::Validation::SignatureValidator.valid?(hmac_request)
         #need to make sure we store the nonce
         Nonce.persist(hmac_request.mac_id, hmac_request.mac_nonce, hmac_request.mac_timestamp.to_i) if valid
-        
-        #ignore failed check if config says so
-        valid || Mach.configuration.ignore_validation_failure
+       
+        logger.warn("WARNING: Request Validation failed") unless valid
+        if !valid && Mach.configuration.ignore_validation_failure
+          logger.warn("WARNING: Ignoring Request Validation failure, Are you sure you want to do it?")
+          return true
+        end  
+        valid
+      end
+
+      def logger
+        Mach.config.logger
       end
     end
   end

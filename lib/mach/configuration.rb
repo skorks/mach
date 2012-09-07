@@ -5,14 +5,14 @@ require 'base64'
 module Mach
   class Configuration
 
-    attr_reader :credential_store, :data_store, :stale_request_window
-    attr_accessor :ignore_validation_failure
+    attr_reader :credential_store, :data_store, :stale_request_window, :ignore_validation_failure, :logger
 
     def initialize
       @stale_request_window = 10
       @data_store = Mach::Persistence::InMemoryStore.configure({})
       @credential_store = Hash.new
       @ignore_validation_failure = false
+      @logger = Logger.new(STDOUT)
     end
 
     def with_credential_store(store, options = {})
@@ -30,6 +30,14 @@ module Mach
 
     def with_stale_request_window(num_seconds)
       @stale_request_window = num_seconds
+    end
+
+    def with_logger(logger)
+      @logger = logger
+    end
+
+    def ignore_validation_failure!
+      @ignore_validation_failure = true
     end
 
     private
