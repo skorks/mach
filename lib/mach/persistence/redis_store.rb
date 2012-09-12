@@ -1,3 +1,4 @@
+require 'mach/error/error'
 require 'mach/persistence/delta_and_nonce_store'
 require 'mach/timestamp'
 require 'redis'
@@ -6,7 +7,7 @@ module Mach
   module Persistence
     class RedisStore < Mach::Persistence::DeltaAndNonceStore
       def initialize(options = {})
-        raise MissingConfigurationOptionError unless options[:host] && options[:port]
+        raise Mach::Error::MissingConfigurationOptionError unless options[:host] && options[:port]
         @redis = Redis.new(:host => options[:host], :port => options[:port])
       end
 
