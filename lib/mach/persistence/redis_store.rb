@@ -9,6 +9,7 @@ module Mach
       def initialize(options = {})
         raise Mach::Error::MissingConfigurationOptionError unless options[:host] && options[:port]
         @redis = Redis.new(:host => options[:host], :port => options[:port])
+        @key_namespace = options[:key_namespace] || ""
       end
 
       def find_delta_by(credential_id)
@@ -30,11 +31,11 @@ module Mach
 
       private
       def delta_key_for(credential_id)
-        "delta_key_for_#{credential_id}"
+        "#{@key_namespace}delta_key_for_#{credential_id}"
       end
 
       def nonce_key_for(credential_id, nonce)
-        "nonce_key_for_#{credential_id}_#{nonce}"
+        "#{@key_namespace}nonce_key_for_#{credential_id}_#{nonce}"
       end
     end
   end
