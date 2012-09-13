@@ -1,6 +1,7 @@
 require 'mach/persistence/in_memory_store'
 require 'mach/persistence/redis_store'
 require 'base64'
+require 'logger'
 
 module Mach
   class Configuration
@@ -12,7 +13,7 @@ module Mach
       @data_store = Mach::Persistence::InMemoryStore.configure({})
       @credential_store = Hash.new
       @ignore_validation_failure = false
-      @logger = Logger.new(STDOUT)
+      @logger = ::Logger.new(STDOUT)
     end
 
     def with_credential_store(store, options = {})
