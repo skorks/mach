@@ -14,23 +14,27 @@ module Mach
     end
 
     def mac_id
-      self.authorization.scan(/^\s*MAC\s*.*id="(.*?)".*/).flatten[0]
+      ensure_mac_authorization { self.authorization.scan(/^\s*MAC\s*.*id="(.*?)".*/).flatten[0] }
     end
 
     def mac_timestamp
-      self.authorization.scan(/^\s*MAC\s*.*ts="(.*?)".*/).flatten[0]
+      ensure_mac_authorization { self.authorization.scan(/^\s*MAC\s*.*ts="(.*?)".*/).flatten[0] }
     end
 
     def mac_nonce
-      self.authorization.scan(/^\s*MAC\s*.*nonce="(.*?)".*/).flatten[0]
+      ensure_mac_authorization { self.authorization.scan(/^\s*MAC\s*.*nonce="(.*?)".*/).flatten[0] }
     end
 
     def mac_ext
-      self.authorization.scan(/^\s*MAC\s*.*ext="(.*?)".*/).flatten[0]
+      ensure_mac_authorization { self.authorization.scan(/^\s*MAC\s*.*ext="(.*?)".*/).flatten[0] }
     end
 
     def mac_signature
-      self.authorization.scan(/^\s*MAC\s*.*mac="(.*?)".*/).flatten[0]
+      ensure_mac_authorization { self.authorization.scan(/^\s*MAC\s*.*mac="(.*?)".*/).flatten[0] }
+    end
+
+    def ensure_mac_authorization(&block)
+      mac_authorization? ? block.call : nil
     end
 
     def mac_normalized_request_string
