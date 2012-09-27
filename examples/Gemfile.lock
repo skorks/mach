@@ -12,7 +12,7 @@ GIT
 PATH
   remote: ../
   specs:
-    mach (0.0.1)
+    mach (0.0.2)
       faraday
       multi_json
       rack
