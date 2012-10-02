@@ -18,10 +18,6 @@ module Mach
 
     def with_credential_store(store, options = {})
       @credential_store = store
-      #store_class = CredentialStore::Adapter.const_get(camelize(store_type.to_s))
-      #@credential_store = store_class.new(options)
-      # find out if we should use redis store first
-      #@credential_store = CredentialStore::Adapter::Redis.new() #todo pass options
     end
 
     def with_data_store(store_identifier, options = {})
